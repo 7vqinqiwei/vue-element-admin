@@ -1,4 +1,9 @@
-import { asyncRoutes, constantRoutes } from '@/router'
+import { constantRoutes } from '@/router'
+import { menuList } from '@/api/menu'
+
+import loadingRoutes from '@/utils/loadingRoutes'
+
+import Layout from '@/layout'
 
 /**
  * Use meta.role to determine if the current user has permission
@@ -18,17 +23,19 @@ function hasPermission(roles, route) {
  * @param routes asyncRoutes
  * @param roles
  */
-export function filterAsyncRoutes(routes, roles) {
+export function filterAsyncRoutes(routes, roles, parent, isLayout) {
   const res = []
-
   routes.forEach(route => {
     const tmp = { ...route }
-    if (hasPermission(roles, tmp)) {
-      if (tmp.children) {
-        tmp.children = filterAsyncRoutes(tmp.children, roles)
-      }
-      res.push(tmp)
+    if (parent) {
+      tmp.module = parent.module
     }
+    console.log(isLayout)
+    tmp.component = isLayout ? Layout : loadingRoutes(tmp.path)
+    if (tmp.children) {
+      tmp.children = filterAsyncRoutes(tmp.children, roles, tmp, false)
+    }
+    res.push(tmp)
   })
 
   return res
@@ -47,18 +54,32 @@ const mutations = {
 }
 
 const actions = {
-  generateRoutes({ commit }, roles) {
+  generateRoutes({ commit }, id) {
     return new Promise(resolve => {
-      let accessedRoutes
-      if (roles.includes('admin')) {
-        accessedRoutes = asyncRoutes || []
-      } else {
-        accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
+      let accessedRoutes = []
+      //根据用户获取菜单
+      if (id) {
+        menuList({ id: id }).then(response => {
+          response.data.forEach(item => {
+            accessedRoutes.push(item)
+          })
+          accessedRoutes = filterAsyncRoutes(accessedRoutes, ['admin'], null, true)
+
+          commit('SET_ROUTES', accessedRoutes)
+          resolve(accessedRoutes)
+        })
       }
-      commit('SET_ROUTES', accessedRoutes)
-      resolve(accessedRoutes)
     })
   }
+}
+
+function loadView(item) {
+  // 路由懒加载
+  console.log(item.module + '/' + item.path)
+  // return () => import(`@/views/${item.module}/${item.path}`)
+  // return () => import(`@/views/permission/${item.path}`)
+  return resolve  => import(`@/views/permission/${item.path}`)
+  // return () => import('@/views/permission/page')
 }
 
 export default {
