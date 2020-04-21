@@ -1,8 +1,6 @@
 import { constantRoutes } from '@/router'
 import { menuList } from '@/api/menu'
 
-import loadingRoutes from '@/utils/loadingRoutes'
-
 import Layout from '@/layout'
 
 /**
@@ -10,6 +8,7 @@ import Layout from '@/layout'
  * @param roles
  * @param route
  */
+// eslint-disable-next-line no-unused-vars
 function hasPermission(roles, route) {
   if (route.meta && route.meta.roles) {
     return roles.some(role => route.meta.roles.includes(role))
@@ -30,8 +29,10 @@ export function filterAsyncRoutes(routes, roles, parent, isLayout) {
     if (parent) {
       tmp.module = parent.module
     }
-    console.log(isLayout)
-    tmp.component = isLayout ? Layout : loadingRoutes(tmp.path)
+    // if (!tmp.alias) {
+    //   tmp.alias = tmp.path
+    // }
+    tmp.component = isLayout ? Layout : loadView(tmp)
     if (tmp.children) {
       tmp.children = filterAsyncRoutes(tmp.children, roles, tmp, false)
     }
@@ -57,7 +58,9 @@ const actions = {
   generateRoutes({ commit }, id) {
     return new Promise(resolve => {
       let accessedRoutes = []
-      //根据用户获取菜单
+      /**
+       * 根据用户获取菜单
+       */
       if (id) {
         menuList({ id: id }).then(response => {
           response.data.forEach(item => {
@@ -75,11 +78,7 @@ const actions = {
 
 function loadView(item) {
   // 路由懒加载
-  console.log(item.module + '/' + item.path)
-  // return () => import(`@/views/${item.module}/${item.path}`)
-  // return () => import(`@/views/permission/${item.path}`)
-  return resolve  => import(`@/views/permission/${item.path}`)
-  // return () => import('@/views/permission/page')
+  return (resolve) => require([`@/views/${item.module}/${item.path}`], resolve)
 }
 
 export default {
