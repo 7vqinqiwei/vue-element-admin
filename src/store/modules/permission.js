@@ -2,6 +2,9 @@ import { constantRoutes } from '@/router'
 import { menuList } from '@/api/menu'
 
 import Layout from '@/layout'
+/**
+ * import fa from 'element-ui/src/locale/lang/fa'
+ */
 
 /**
  * Use meta.role to determine if the current user has permission
@@ -22,24 +25,16 @@ function hasPermission(roles, route) {
  * @param routes asyncRoutes
  * @param roles
  */
-export function filterAsyncRoutes(routes, roles, parent, isLayout) {
-  const res = []
-  routes.forEach(route => {
-    const tmp = { ...route }
-    if (parent) {
-      tmp.module = parent.module
-    }
-    // if (!tmp.alias) {
-    //   tmp.alias = tmp.path
-    // }
-    tmp.component = isLayout ? Layout : loadView(tmp)
+export function filterAsyncRoutes(routes, roles, isLayout, path) {
+  for (let i = 0; i < routes.length; i++) {
+    const tmp = routes[i]
+    tmp.component = tmp.isLayout ? Layout : loadView(path + tmp.path)
     if (tmp.children) {
-      tmp.children = filterAsyncRoutes(tmp.children, roles, tmp, false)
+      const aPath = path + tmp.module + '/'
+      tmp.children = filterAsyncRoutes(tmp.children, roles, false, aPath)
     }
-    res.push(tmp)
-  })
-
-  return res
+  }
+  return routes
 }
 
 const state = {
@@ -66,7 +61,7 @@ const actions = {
           response.data.forEach(item => {
             accessedRoutes.push(item)
           })
-          accessedRoutes = filterAsyncRoutes(accessedRoutes, ['admin'], null, true)
+          accessedRoutes = filterAsyncRoutes(accessedRoutes, ['admin'], true, '')
 
           commit('SET_ROUTES', accessedRoutes)
           resolve(accessedRoutes)
@@ -76,9 +71,16 @@ const actions = {
   }
 }
 
-function loadView(item) {
+function loadView(path) {
   // 路由懒加载
-  return (resolve) => require([`@/views/${item.module}/${item.path}`], resolve)
+  if (path && path.startsWith('/')) {
+    path = path.substring(1)
+  }
+  if (path && path.indexOf('/:') > -1) {
+    path = path.substring(0, path.indexOf('/:'))
+  }
+  console.log(path)
+  return (resolve) => require([`@/views/${path}`], resolve)
 }
 
 export default {

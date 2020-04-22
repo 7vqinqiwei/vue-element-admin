@@ -5,6 +5,7 @@ const menuList = [
     alwaysShow: true, // will always show the root menu
     name: 'Permission',
     module: 'permission',
+    isLayout: true,
     meta: {
       title: 'Permission',
       icon: 'lock',
@@ -40,6 +41,7 @@ const menuList = [
   {
     path: '/icon',
     module: 'icons',
+    isLayout: true,
     children: [
       {
         path: 'index',
@@ -51,6 +53,7 @@ const menuList = [
   {
     path: '/components',
     module: 'components-demo',
+    isLayout: true,
     redirect: 'noRedirect',
     name: 'ComponentDemo',
     meta: {
@@ -133,6 +136,7 @@ const menuList = [
   {
     path: '/charts',
     module: 'charts',
+    isLayout: true,
     redirect: 'noRedirect',
     name: 'Charts',
     meta: {
@@ -156,7 +160,251 @@ const menuList = [
         meta: { title: 'Mix Chart', noCache: true }
       }
     ]
+  },
+  {
+    path: '/table',
+    module: 'table',
+    isLayout: true,
+    redirect: '/table/complex-table',
+    name: 'Table',
+    meta: {
+      title: 'Table',
+      icon: 'table'
+    },
+    children: [
+      {
+        path: 'dynamic-table',
+        name: 'DynamicTable',
+        meta: { title: 'Dynamic Table' }
+      },
+      {
+        path: 'drag-table',
+        name: 'DragTable',
+        meta: { title: 'Drag Table' }
+      },
+      {
+        path: 'inline-edit-table',
+        name: 'InlineEditTable',
+        meta: { title: 'Inline Edit' }
+      },
+      {
+        path: 'complex-table',
+        name: 'ComplexTable',
+        meta: { title: 'Complex Table' }
+      }
+    ]
+  },
+  {
+    path: '/example',
+    module: 'example',
+    isLayout: true,
+    redirect: '/example/list',
+    name: 'Example',
+    meta: {
+      title: 'Example',
+      icon: 'example'
+    },
+    children: [
+      {
+        path: 'create',
+        name: 'CreateArticle',
+        meta: { title: 'Create Article', icon: 'edit' }
+      },
+      {
+        path: 'edit/:id(\\d+)',
+        name: 'EditArticle',
+        meta: { title: 'Edit Article', noCache: true, activeMenu: '/example/list' },
+        hidden: true
+      },
+      {
+        path: 'list',
+        name: 'ArticleList',
+        meta: { title: 'Article List', icon: 'list' }
+      }
+    ]
+  },
+  {
+    path: '/tab',
+    module: 'tab',
+    isLayout: true,
+    children: [
+      {
+        path: 'index',
+        name: 'Tab',
+        meta: { title: 'Tab', icon: 'tab' }
+      }
+    ]
+  },
+  {
+    path: '/error',
+    module: 'error-page',
+    isLayout: true,
+    redirect: 'noRedirect',
+    name: 'ErrorPages',
+    meta: {
+      title: 'Error Pages',
+      icon: '404'
+    },
+    children: [
+      {
+        path: '401',
+        name: 'Page401',
+        meta: { title: '401', noCache: true }
+      },
+      {
+        path: '404',
+        name: 'Page404',
+        meta: { title: '404', noCache: true }
+      }
+    ]
+  },
+  {
+    path: '/error-log',
+    module: 'error-log',
+    isLayout: true,
+    children: [
+      {
+        path: 'index',
+        name: 'ErrorLog',
+        meta: { title: 'Error Log', icon: 'bug' }
+      }
+    ]
+  },
+
+  {
+    path: '/excel',
+    module: 'excel',
+    isLayout: true,
+    redirect: '/excel/export-excel',
+    name: 'Excel',
+    meta: {
+      title: 'Excel',
+      icon: 'excel'
+    },
+    children: [
+      {
+        path: 'export-excel',
+        name: 'ExportExcel',
+        meta: { title: 'Export Excel' }
+      },
+      {
+        path: 'select-excel',
+        name: 'SelectExcel',
+        meta: { title: 'Export Selected' }
+      },
+      {
+        path: 'merge-header',
+        name: 'MergeHeader',
+        meta: { title: 'Merge Header' }
+      },
+      {
+        path: 'upload-excel',
+        name: 'UploadExcel',
+        meta: { title: 'Upload Excel' }
+      }
+    ]
+  },
+
+  {
+    path: '/zip',
+    module: 'zip',
+    redirect: '/zip/download',
+    alwaysShow: true,
+    isLayout: true,
+    name: 'Zip',
+    meta: { title: 'Zip', icon: 'zip' },
+    children: [
+      {
+        path: 'index',
+        name: 'ExportZip',
+        meta: { title: 'Export Zip' }
+      }
+    ]
+  },
+
+  {
+    path: '/pdf',
+    module: 'pdf',
+    redirect: '/pdf/index',
+    isLayout: true,
+    children: [
+      {
+        path: 'index',
+        name: 'PDF',
+        meta: { title: 'PDF', icon: 'pdf' }
+      }
+    ]
+  },
+  {
+    path: '/pdf/download',
+    isLayout: false,
+    hidden: true
+  },
+  {
+    path: '/nested',
+    module: 'nested',
+    redirect: '/nested/menu1/menu1-1',
+    name: 'Nested',
+    isLayout: true,
+    meta: {
+      title: 'Nested Routes',
+      icon: 'nested'
+    },
+    children: [
+      {
+        path: 'menu1',
+        // component: () => import('@/views/nested/menu1/index'), // Parent router-view
+        name: 'Menu1',
+        module: 'menu1',
+        meta: { title: 'Menu 1' },
+        redirect: '/nested/menu1/menu1-1',
+        children: [
+          {
+            path: 'menu1-1',
+            // component: () => import('@/views/nested/menu1/menu1-1'),
+            name: 'Menu1-1',
+            meta: { title: 'Menu 1-1' }
+          },
+          {
+            path: 'menu1-2',
+            // component: () => import('@/views/nested/menu1/menu1-2'),
+            name: 'Menu1-2',
+            module: 'menu1-2',
+            redirect: '/nested/menu1/menu1-2/menu1-2-1',
+            meta: { title: 'Menu 1-2' },
+            children: [
+              {
+                path: 'menu1-2-1',
+                // component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
+                name: 'Menu1-2-1',
+                meta: { title: 'Menu 1-2-1' }
+              },
+              {
+                path: 'menu1-2-2',
+                // component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
+                name: 'Menu1-2-2',
+                meta: { title: 'Menu 1-2-2' }
+              }
+            ]
+          },
+          {
+            path: 'menu1-3',
+            // component: () => import('@/views/nested/menu1/menu1-3'),
+            name: 'Menu1-3',
+            meta: { title: 'Menu 1-3' }
+          }
+        ]
+      },
+      {
+        path: 'menu2',
+        name: 'Menu2',
+        // component: () => import('@/views/nested/menu2/index'),
+        meta: { title: 'Menu 2' }
+      }
+    ]
   }
+
+
 ]
 
 export default [
