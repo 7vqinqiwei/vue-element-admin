@@ -67,8 +67,8 @@ $t: .1s;
     width: 100%;
     background: #e0e0e0;
     color: #000;
-    line-height: 60px;
-    height: 60px;
+    line-height: 40px;
+    height: 40px;
     cursor: pointer;
     font-size: 18px;
     overflow: hidden;
@@ -94,7 +94,7 @@ $t: .1s;
       @for $i from 1 through $n {
         &:nth-of-type(#{$i}) {
           transition-delay: ($n - $i)*$t;
-          transform: translate3d(0, ($i - 1)*60px, 0);
+          transform: translate3d(0, ($i - 1)*40px, 0);
         }
       }
     }
