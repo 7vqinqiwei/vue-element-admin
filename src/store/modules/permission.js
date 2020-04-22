@@ -79,7 +79,6 @@ function loadView(path) {
   if (path && path.indexOf('/:') > -1) {
     path = path.substring(0, path.indexOf('/:'))
   }
-  console.log(path)
   return (resolve) => require([`@/views/${path}`], resolve)
 }
 
