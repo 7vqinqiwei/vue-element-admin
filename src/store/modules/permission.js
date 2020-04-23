@@ -63,6 +63,8 @@ const actions = {
           })
           accessedRoutes = filterAsyncRoutes(accessedRoutes, ['admin'], true, '')
 
+          // 404 page must be placed at the end !!!
+          accessedRoutes.push({ path: '*', redirect: '/404', hidden: true })
           commit('SET_ROUTES', accessedRoutes)
           resolve(accessedRoutes)
         })
