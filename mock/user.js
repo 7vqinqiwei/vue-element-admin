@@ -1,7 +1,7 @@
 
 const tokens = {
   admin: {
-    password: '111111',
+    password: '123456',
     token: 'admin-token'
   },
   editor: {
